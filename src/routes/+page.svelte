@@ -1,231 +1,207 @@
 <script lang="ts">
-	import { MilkdownProvider, MilkdownEditor } from '$lib';
+	import { MilkdownProvider } from '$lib';
+	import SplitViewEditor from '$lib/components/SplitViewEditor.svelte';
 
-	let markdownContent = $state(`# Milkdown
+	const defaultMarkdown = `# Milkdown Split View Editor
 
-👋 Welcome to Milkdown. We are so glad to see you here!
+👋 Welcome to the split view demo! Try typing in the visual editor on the left.
 
-💭 You may wonder, what is Milkdown? Please write something here.
+## What is Split View?
 
-> ⚠️ **Not the right side!**
->
-> Please try something on the left side.
+**Left side**: WYSIWYG visual editor (rich text editing)
+**Right side**: Raw markdown text (live synced)
 
-![1.00](https://github.com/Milkdown/milkdown/blob/main/polar.jpeg "Hello by a polar bear")
+## Features
 
-You're seeing this editor called **🥞Crepe**, which is an editor built on top of Milkdown.
+- **🔄 Live Sync**: Changes sync between both panes
+- **📏 Resizable**: Drag the divider to resize panes
+- **🎯 View Modes**: Toggle between editor, split, or raw text
+- **🎨 Themes**: Nord, Nord Dark, Frame, Frame Dark
+- **📋 Copy**: Copy raw markdown to clipboard
+- **💾 Auto-save**: Optional auto-save functionality
 
-If you want to install this editor, you can run \`npm install @milkdown/crepe\`. Then you can use it like this:
+## Try It Out!
 
-\`\`\`js
-import { Crepe } from "@milkdown/crepe";
-import "@milkdown/crepe/theme/common/style.css";
-// We have some themes for you to choose, ex.
-import "@milkdown/crepe/theme/frame.css";
+1. Type in the visual editor (left) → see raw markdown update (right)
+2. Edit raw markdown (right) → see visual editor update (left)
+3. Resize the panes by dragging the divider
+4. Switch between different view modes using the toolbar
+5. Try different themes
 
-// Or you can create your own theme
-import "./your-theme.css";
+## Code Example
 
-const crepe = new Crepe({
-  root: "#app",
-  defaultValue: "# Hello, Milkdown!",
-});
-
-crepe.create().then(() => {
-  console.log("Milkdown is ready!");
-});
-
-// Before unmount
-crepe.destroy();
+\`\`\`javascript
+// This is a code block
+function hello() {
+    console.log("Hello, Split View!");
+}
 \`\`\`
 
----
+> **Tip**: This is a blockquote. Notice how it appears in both the visual editor and raw markdown!
 
-## Structure
+## Lists and Tables
 
-> 🍼 [Milkdown](https://github.com/Milkdown/milkdown) is a WYSIWYG markdown editor framework.
->
-> Which means you can build your own markdown editor with Milkdown.
+### Task List
 
-In the real world, a typical milkdown editor is built on top of 3 layers:
+- [x] ✅ Visual editor on the left
+- [x] ✅ Raw markdown on the right
+- [x] ✅ Live synchronization
+- [ ] 🔄 Try editing this item!
 
-- [x] 🥛 Core: The core of Milkdown, which provides the plugin loading system with the editor concepts.
-- [x] 🧇 Plugins: A set of plugins that can be used to extend the functionalities of the editor.
-- [x] 🍮 Components: Some headless components that can be used to build your own editor.
-
-At the start, you may find it hard to understand all these concepts.
-But don't worry, we have this \`@milkdown/crepe\` editor for you to get started quickly.
-
----
-
-## You can do more with Milkdown
-
-In Milkdown, you can extend the editor in many ways:
-
-| Feature      | Description                                          | Example                   |
-| ------------ | ---------------------------------------------------- | ------------------------- |
-| 🎨 Theme     | Create your own theme with CSS                       | Nord, Dracula             |
-| 🧩 Plugin    | Create your own plugin to extend the editor          | Search, Collab            |
-| 📦 Component | Create your own component to build your own editor   | Slash Menu, Toolbar       |
-| 📚 Syntax    | Create your own syntax to extend the markdown parser | Image with Caption, LaTex |
-
-We have provided a lot of plugins and components, with an out-of-the-box crepe editor for you to use and learn.
+| Feature | Status | Description |
+|---------|--------|-------------|
+| Split View | ✅ | Left-right layout |
+| Themes | ✅ | Multiple theme support |
+| Responsive | ✅ | Works on mobile |
 
 ---
 
-## Open Source
+🥞 **Built with Svelte 5 + Milkdown Crepe**`;
 
-- Milkdown is an open-source project under the MIT license.
-- Everyone is welcome to contribute to the project, and you can use it in your own project for free.
-- Please let me know what you are building with Milkdown, I would be so glad to see that!
+	function handleReady(instance: any) {
+		console.log('SplitViewEditor ready: Milkdown instance initialized');
+	}
 
-Maintaining Milkdown is a lot of work, and we are working on it in our spare time.
-If you like Milkdown, please consider supporting us by [sponsoring](https://github.com/sponsors/Saul-Mirone) the project.
-We'll be so grateful for your support.
-
-## Who built Milkdown?
-
-Milkdown is built by [Mirone](https://github.com/Saul-Mirone) and designed by [Meo](https://meo.cool).`);
-
-	let currentTheme = $state<'nord' | 'nord-dark' | 'frame' | 'frame-dark'>('nord');
-
-	function handleContentChange(content: string) {
-		markdownContent = content;
-		console.log('Content changed:', content.substring(0, 50) + (content.length > 50 ? '...' : ''));
+	function handleError(error: Error) {
+		console.error('SplitViewEditor error:', error.message);
 	}
 
 	function handleAutoSave(content: string) {
-		console.log('Auto-saved:', content.substring(0, 50) + (content.length > 50 ? '...' : ''));
+		console.log('Auto-saved:', content.substring(0, 100) + (content.length > 100 ? '...' : ''));
+		// Here you could save to localStorage, server, etc.
+		localStorage.setItem('milkdown-content', content);
 	}
-
-	// Store editor instance to handle theme changes
-	let editorInstance: any = $state(null);
-
-	// React to theme changes
-	$effect(() => {
-		if (editorInstance && typeof editorInstance.setTheme === 'function') {
-			editorInstance.setTheme(currentTheme);
-			console.log(`Theme changed to: ${currentTheme}`);
-		}
-	});
 </script>
 
 <main>
-	<h1>Svelte 5 Milkdown Editor Demo</h1>
-
-	<div class="theme-controls">
-		<label for="theme-select">Theme:</label>
-		<select id="theme-select" bind:value={currentTheme}>
-			<option value="nord">Nord (Default)</option>
-			<option value="nord-dark">Nord Dark</option>
-			<option value="frame">Frame Light</option>
-			<option value="frame-dark">Frame Dark</option>
-		</select>
+	<div class="header">
+		<h1>🎨 Svelte 5 Milkdown Split View Editor</h1>
+		<p class="subtitle">
+			WYSIWYG visual editor ↔ Raw markdown text • Live synchronization • Resizable panes
+		</p>
 	</div>
 
-	<div class="editor-container">
+	<div class="editor-wrapper">
 		<MilkdownProvider>
-			<MilkdownEditor
-				bind:this={editorInstance}
-				defaultValue={markdownContent}
-				height="400px"
-				placeholder="Start typing your markdown here..."
-				theme={currentTheme}
+			<SplitViewEditor
+				defaultValue={defaultMarkdown}
+				height="calc(100vh - 120px)"
+				theme="nord"
 				autosave={{
 					enabled: true,
 					delay: 3000,
 					onSave: handleAutoSave
 				}}
-				onChange={handleContentChange}
-				onReady={(instance) => {
-					console.log('Editor ready: Milkdown instance initialized');
-				}}
-				onError={(error) => {
-					console.error('Editor error:', error.message);
-				}}
+				placeholder="Start typing your markdown here..."
+				onReady={handleReady}
+				onError={handleError}
 			/>
 		</MilkdownProvider>
 	</div>
 
-	<div class="info-panel">
-		<h2>Current Markdown Content:</h2>
-		<pre class="content-preview">{markdownContent}</pre>
+	<div class="footer">
+		<p>
+			💡 <strong>Tip:</strong> The visual editor (left) provides rich editing, while raw markdown (right) shows the actual markdown text. Both stay in sync!
+		</p>
 	</div>
 </main>
 
 <style>
 	main {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 2rem;
+		margin: 0;
+		padding: 0;
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+		background: #f8f9fa;
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
 	}
 
-	h1 {
-		color: #333;
-		margin-bottom: 2rem;
+	.header {
+		background: white;
+		padding: 1.5rem 2rem;
+		border-bottom: 1px solid #e2e8f0;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+	}
+
+	.header h1 {
+		margin: 0 0 0.5rem 0;
+		color: #1a202c;
+		font-size: 1.875rem;
+		font-weight: 700;
 		text-align: center;
 	}
 
-	.editor-container {
-		margin-bottom: 2rem;
+	.subtitle {
+		margin: 0;
+		color: #64748b;
+		text-align: center;
+		font-size: 0.875rem;
+		line-height: 1.4;
 	}
 
-	.info-panel {
-		background: #f5f5f5;
-		padding: 1.5rem;
-		border-radius: 8px;
-	}
-
-	.info-panel h2 {
-		margin-top: 0;
-		color: #333;
-	}
-
-	.content-preview {
-		background: #fff;
+	.editor-wrapper {
+		flex: 1;
 		padding: 1rem;
-		border: 1px solid #ddd;
-		border-radius: 4px;
-		white-space: pre-wrap;
-		max-height: 300px;
-		overflow-y: auto;
-		font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-		font-size: 14px;
-		line-height: 1.5;
+		min-height: 0;
 	}
 
-	.theme-controls {
-		margin-bottom: 1rem;
-		padding: 1rem;
-		background: #f8f9fa;
-		border-radius: 8px;
-		display: flex;
-		align-items: center;
-		gap: 1rem;
+	.footer {
+		background: white;
+		padding: 1rem 2rem;
+		border-top: 1px solid #e2e8f0;
+		box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
 	}
 
-	.theme-controls label {
-		font-weight: 600;
-		color: #333;
+	.footer p {
+		margin: 0;
+		color: #64748b;
+		text-align: center;
+		font-size: 0.875rem;
 	}
 
-	.theme-controls select {
-		padding: 0.5rem;
-		border: 1px solid #ddd;
-		border-radius: 4px;
-		background: #fff;
-		font-size: 14px;
-		cursor: pointer;
+	/* Responsive design */
+	@media (max-width: 768px) {
+		.header {
+			padding: 1rem;
+		}
+
+		.header h1 {
+			font-size: 1.5rem;
+		}
+
+		.subtitle {
+			font-size: 0.75rem;
+		}
+
+		.editor-wrapper {
+			padding: 0.5rem;
+		}
+
+		.footer {
+			padding: 0.75rem 1rem;
+		}
 	}
 
-	.theme-controls select:hover {
-		border-color: #007bff;
-	}
+	/* Dark theme support for the page itself */
+	@media (prefers-color-scheme: dark) {
+		main {
+			background: #0f172a;
+		}
 
-	.theme-controls select:focus {
-		outline: none;
-		border-color: #007bff;
-		box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+		.header,
+		.footer {
+			background: #1e293b;
+			border-color: #334155;
+		}
+
+		.header h1 {
+			color: #f1f5f9;
+		}
+
+		.subtitle,
+		.footer p {
+			color: #94a3b8;
+		}
 	}
 </style>

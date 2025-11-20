@@ -1,0 +1,73 @@
+@import 'tailwindcss';
+@source "./src/**/*.svelte";
+
+/* Milkdown Editor CSS 隔离 */
+@theme {
+  /* 编辑器专用的样式重置 */
+  --color-editor-bg: #ffffff;
+  --color-editor-text: #1f2937;
+  --color-editor-border: #e5e7eb;
+}
+
+/* 编辑器容器样式隔离 */
+.milkdown-editor {
+  /* 创建样式隔离容器 */
+  contain: style layout;
+  isolation: isolate;
+
+  /* 重置可能影响编辑器的继承样式 */
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+
+  /* 确保编辑器容器能够滚动 */
+  overflow: auto;
+  max-height: 100%;
+}
+
+/* Milkdown ProseMirror 编辑器内容区域 */
+.milkdown-editor .ProseMirror {
+  /* 确保 ProseMirror 编辑器有正确的滚动行为 */
+  overflow-y: auto;
+  max-height: 100%;
+  min-height: 200px;
+  padding: 16px;
+  outline: none;
+  border: none;
+}
+
+/* 完全隔离列表样式，解决重复项目符号问题 */
+.milkdown-editor .ProseMirror,
+.milkdown-editor .ProseMirror *,
+.milkdown-editor .milkdown,
+.milkdown-editor .milkdown * {
+  box-sizing: border-box;
+}
+
+.milkdown-editor .ProseMirror ul,
+.milkdown-editor .ProseMirror ol {
+  /* 强制禁用浏览器默认的项目符号 */
+  list-style-type: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+
+.milkdown-editor .ProseMirror li {
+  /* 确保列表项没有默认项目符号 */
+  list-style-type: none !important;
+}
+
+/* 针对 Milkdown Crepe 的特定样式类 */
+.milkdown-editor .milkdown-list-item-block,
+.milkdown-editor .milkdown-list-item-block * {
+  list-style-type: none !important;
+}
+
+/* 确保嵌套列表也没有重复项目符号 */
+.milkdown-editor .ProseMirror ul ul,
+.milkdown-editor .ProseMirror ol ol,
+.milkdown-editor .ProseMirror ul ol,
+.milkdown-editor .ProseMirror ol ul {
+  list-style-type: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}

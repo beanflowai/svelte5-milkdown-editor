@@ -159,33 +159,34 @@
 			// Set up Milkdown event listeners if available
 			if (instance?.crepe) {
 				try {
-					// Try multiple event types for better compatibility
-					instance.crepe.on('update', (view: any) => {
-						checkContentChanges();
-					});
-
-					instance.crepe.on('change', (view: any) => {
-						checkContentChanges();
-					});
-
-					// Also listen to ProseMirror transactions if available
-					const view = instance.crepe.editor?.view;
-					if (view) {
-						view.on('update', () => {
+					// 正确使用 Crepe 的 on API
+					instance.crepe.on((listenerManager) => {
+						// 监听文档更新
+						listenerManager.updated(() => {
 							checkContentChanges();
 						});
-					}
 
-					// Only use polling as a last resort, with longer interval
-					contentMonitorInterval = setInterval(checkContentChanges, 10000); // 10 seconds
+						// 监听 Markdown 内容更新
+						listenerManager.markdownUpdated(() => {
+							checkContentChanges();
+						});
+
+						// 监听选择变化
+						listenerManager.selectionUpdated(() => {
+							checkContentChanges();
+						});
+					});
+
+					// 仍然保留轮询作为备选，但间隔更长
+					contentMonitorInterval = setInterval(checkContentChanges, 15000); // 15秒
 				} catch (e) {
 					console.warn('Failed to set up event listeners, using polling fallback:', e);
-					// Fallback to polling if events don't work
-					contentMonitorInterval = setInterval(checkContentChanges, 5000); // 5 seconds
+					// 轮询备选方案
+					contentMonitorInterval = setInterval(checkContentChanges, 8000); // 8秒
 				}
 			} else {
-				// Fallback polling
-				contentMonitorInterval = setInterval(checkContentChanges, 5000); // 5 seconds
+				// 轮询备选方案
+				contentMonitorInterval = setInterval(checkContentChanges, 8000);
 			}
 
 		} catch (err) {
@@ -249,7 +250,7 @@
 	class:loading
 	class:error
 	{id}
-	style="height: {height}; min-height: {minHeight};"
+	style="height: {height}; min-height: {minHeight}; flex: 1;"
 	bind:this={editorElement}
 	role="textbox"
 	aria-multiline="true"
