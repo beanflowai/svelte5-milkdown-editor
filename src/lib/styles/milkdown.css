@@ -1,0 +1,100 @@
+/* Milkdown Crepe Base Styles - Using Official Nord Theme */
+@import '@milkdown/crepe/theme/nord.css';
+
+/* Basic editor styles */
+.milkdown-editor {
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.milkdown-editor:focus-within {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.milkdown-editor.error {
+    border-color: #dc3545;
+    background-color: #f8d7da;
+}
+
+.milkdown-editor.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: #666;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message {
+    padding: 1rem;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+/* Ensure ProseMirror content is properly styled */
+.milkdown-editor :global(.ProseMirror) {
+    outline: none;
+    padding: 1rem;
+    min-height: 200px;
+    line-height: 1.6;
+}
+
+.milkdown-editor :global(.ProseMirror p) {
+    margin: 0 0 1em 0;
+}
+
+.milkdown-editor :global(.ProseMirror h1) {
+    font-size: 2em;
+    font-weight: bold;
+    margin: 0.67em 0;
+}
+
+.milkdown-editor :global(.ProseMirror h2) {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0.75em 0;
+}
+
+.milkdown-editor :global(.ProseMirror h3) {
+    font-size: 1.17em;
+    font-weight: bold;
+    margin: 0.83em 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .milkdown-editor {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+}
