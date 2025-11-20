@@ -1,6 +1,12 @@
-/* Milkdown Crepe Theme Styles - Import all available themes */
+/* Milkdown Crepe Theme Styles */
+/* Import common base styles FIRST - contains all feature styles */
+@import '@milkdown/crepe/theme/common/style.css';
+
+/* Import theme color schemes */
 @import '@milkdown/crepe/theme/nord.css';
+@import '@milkdown/crepe/theme/nord-dark.css';
 @import '@milkdown/crepe/theme/frame.css';
+@import '@milkdown/crepe/theme/frame-dark.css';
 
 /* Theme-specific CSS variables for better control */
 :root {

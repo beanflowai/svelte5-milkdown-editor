@@ -37,26 +37,4 @@
   box-sizing: border-box;
 }
 
-/* 精确重置浏览器默认样式，保留Milkdown功能样式 */
-.milkdown-editor .ProseMirror {
-  box-sizing: border-box;
-}
-
-/* 只重置浏览器的默认列表样式，但不影响Milkdown的自定义样式 */
-.milkdown-editor .ProseMirror > ul,
-.milkdown-editor .ProseMirror > ol {
-  /* 只重置浏览器默认的项目符号和内边距 */
-  list-style-type: none !important;
-  padding-left: 0 !important;
-  margin: 0 !important;
-}
-
-/* 保留Milkdown Crepe的自定义列表样式类 */
-.milkdown-editor .ProseMirror .milkdown-list-item-block,
-.milkdown-editor .ProseMirror .milkdown-list-item-block ul,
-.milkdown-editor .ProseMirror .milkdown-list-item-block ol {
-  /* 恢复Milkdown的样式，让它们正常工作 */
-  list-style-type: inherit !important;
-  padding-left: inherit !important;
-  margin-left: inherit !important;
-}
+/* Milkdown's own reset.css handles list styling correctly */

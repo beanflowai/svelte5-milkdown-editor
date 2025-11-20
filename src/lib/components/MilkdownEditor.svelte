@@ -246,7 +246,7 @@
 </script>
 
 <div
-	class="milkdown-editor {className}"
+	class="milkdown milkdown-editor {className}"
 	class:loading
 	class:error
 	{id}

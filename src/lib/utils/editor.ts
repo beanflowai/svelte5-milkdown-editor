@@ -20,12 +20,12 @@ export async function createEditor(element: HTMLElement, options: EditorOptions 
 
 	await crepe.create();
 
-	// Apply theme class to the editor container
+	// Ensure the root element has the .milkdown class for proper styling
+	element.classList.add('milkdown');
+
+	// Apply theme data attribute to root element
 	if (options.theme) {
-		const editorContainer = element.querySelector('.crepe-editor') as HTMLElement;
-		if (editorContainer) {
-			editorContainer.setAttribute('data-theme', options.theme);
-		}
+		element.setAttribute('data-theme', options.theme);
 	}
 
 	return {
