@@ -68,6 +68,24 @@
 	let lastKnownContent = $state('');
 	let pendingAutoSave = $state(false);
 
+	// Apply theme to DOM element and editor instance
+	$effect(() => {
+		if (editorElement && editorAPI) {
+			editorElement.setAttribute('data-theme', theme);
+			editorAPI.setTheme(theme);
+		}
+	});
+
+	// Handle theme changes
+	$effect(() => {
+		if (editorAPI && instance) {
+			const currentTheme = editorAPI.getTheme();
+			if (currentTheme !== theme) {
+				editorAPI.setTheme(theme);
+			}
+		}
+	});
+
 	// Merge default options with props
 	const mergedOptions: EditorOptions = {
 		defaultValue,
@@ -106,7 +124,12 @@
 				lastKnownContent = currentContent;
 			}
 		} catch (err) {
-			console.error('Error checking content changes:', err);
+			const errorMsg = err instanceof Error ? err.message : 'Unknown error';
+			console.error('Error checking content changes:', errorMsg);
+			error = new Error(`Failed to check content changes: ${errorMsg}`);
+			if (onError) {
+				onError(error);
+			}
 		}
 	};
 
@@ -136,16 +159,33 @@
 			// Set up Milkdown event listeners if available
 			if (instance?.crepe) {
 				try {
-					instance.crepe.on('update', () => {
+					// Try multiple event types for better compatibility
+					instance.crepe.on('update', (view: any) => {
 						checkContentChanges();
 					});
+
+					instance.crepe.on('change', (view: any) => {
+						checkContentChanges();
+					});
+
+					// Also listen to ProseMirror transactions if available
+					const view = instance.crepe.editor?.view;
+					if (view) {
+						view.on('update', () => {
+							checkContentChanges();
+						});
+					}
+
+					// Only use polling as a last resort, with longer interval
+					contentMonitorInterval = setInterval(checkContentChanges, 10000); // 10 seconds
 				} catch (e) {
+					console.warn('Failed to set up event listeners, using polling fallback:', e);
 					// Fallback to polling if events don't work
-					contentMonitorInterval = setInterval(checkContentChanges, 3000);
+					contentMonitorInterval = setInterval(checkContentChanges, 5000); // 5 seconds
 				}
 			} else {
-				// Fallback polling (3 seconds, much less frequent)
-				contentMonitorInterval = setInterval(checkContentChanges, 3000);
+				// Fallback polling
+				contentMonitorInterval = setInterval(checkContentChanges, 5000); // 5 seconds
 			}
 
 		} catch (err) {
@@ -191,6 +231,16 @@
 
 	export function blur() {
 		editorElement?.blur();
+	}
+
+	export function setTheme(newTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark') {
+		if (editorAPI) {
+			editorAPI.setTheme(newTheme);
+		}
+	}
+
+	export function getTheme(): string {
+		return editorAPI?.getTheme() || theme;
 	}
 </script>
 

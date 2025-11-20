@@ -2,16 +2,35 @@ import type { EditorOptions, EditorInstance } from '../types';
 import { Crepe } from '@milkdown/crepe';
 
 export async function createEditor(element: HTMLElement, options: EditorOptions = {}): Promise<EditorInstance> {
+	// Map theme names to CSS class names
+	const themeClassMap = {
+		'nord': 'nord',
+		'nord-dark': 'nord-dark',
+		'frame': 'frame',
+		'frame-dark': 'frame-dark'
+	};
+
 	const crepe = new Crepe({
 		root: element,
 		defaultValue: options.defaultValue || '',
-		features: options.features || {}
+		features: options.features || {},
+		// Apply theme by adding CSS class to the root element
+		theme: themeClassMap[options.theme as keyof typeof themeClassMap] || 'nord'
 	});
 
 	await crepe.create();
 
+	// Apply theme class to the editor container
+	if (options.theme) {
+		const editorContainer = element.querySelector('.crepe-editor') as HTMLElement;
+		if (editorContainer) {
+			editorContainer.setAttribute('data-theme', options.theme);
+		}
+	}
+
 	return {
-		crepe
+		crepe,
+		theme: options.theme || 'nord'
 	};
 }
 
@@ -20,9 +39,29 @@ export function getMarkdownContent(instance: EditorInstance): string {
 }
 
 export function setMarkdownContent(instance: EditorInstance, content: string): void {
-	// TODO: Implement set content functionality for Milkdown 7.x
-	// For now, this is a placeholder
-	console.warn('setMarkdownContent not yet implemented for Milkdown 7.x');
+	try {
+		// In Milkdown 7.x with Crepe, we can use the setMarkdown method
+		if (instance.crepe && typeof instance.crepe.setMarkdown === 'function') {
+			instance.crepe.setMarkdown(content);
+		} else {
+			// Fallback: try to access the ProseMirror view directly
+			const view = instance.crepe.editor?.view;
+			if (view) {
+				const { state, dispatch } = view;
+				const { tr } = state;
+
+				// Create a new transaction with the updated content
+				const newDoc = state.schema.text(content);
+				const newTr = tr.replaceWith(0, state.doc.content.size, newDoc.content);
+				dispatch(newTr);
+			} else {
+				throw new Error('Cannot set content: editor view not available');
+			}
+		}
+	} catch (error) {
+		console.error('Failed to set markdown content:', error);
+		throw new Error(`Failed to set content: ${error instanceof Error ? error.message : 'Unknown error'}`);
+	}
 }
 
 export function destroyEditor(instance: EditorInstance): void {

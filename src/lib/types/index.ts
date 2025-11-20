@@ -2,6 +2,7 @@ import type { Crepe, CrepeFeature } from '@milkdown/crepe';
 
 export interface EditorInstance {
 	crepe: Crepe;
+	theme?: 'nord' | 'nord-dark' | 'frame' | 'frame-dark';
 }
 
 export interface EditorOptions {

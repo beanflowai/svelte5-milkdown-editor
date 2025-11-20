@@ -1,41 +1,91 @@
 <script lang="ts">
 	import { MilkdownProvider, MilkdownEditor } from '$lib';
 
-	let markdownContent = $state(`# Welcome to Svelte 5 Milkdown Editor
+	let markdownContent = $state(`# Milkdown
 
-This is a **demo** of the Svelte 5 + Milkdown integration.
+👋 Welcome to Milkdown. We are so glad to see you here!
 
-## Features
+💭 You may wonder, what is Milkdown? Please write something here.
 
-- **Bold text**
-- *Italic text*
-- \`Inline code\`
-- [Links](https://example.com)
-
-## Lists
-
-1. First item
-2. Second item
-3. Third item
-
-- Unordered item 1
-- Unordered item 2
-
-## Code Block
-
-\`\`\`javascript
-function hello() {
-    console.log("Hello, Svelte 5!");
-}
-\`\`\`
-
-> This is a blockquote
+> ⚠️ **Not the right side!**
 >
-> It can span multiple lines
+> Please try something on the left side.
+
+![1.00](https://github.com/Milkdown/milkdown/blob/main/polar.jpeg "Hello by a polar bear")
+
+You're seeing this editor called **🥞Crepe**, which is an editor built on top of Milkdown.
+
+If you want to install this editor, you can run \`npm install @milkdown/crepe\`. Then you can use it like this:
+
+\`\`\`js
+import { Crepe } from "@milkdown/crepe";
+import "@milkdown/crepe/theme/common/style.css";
+// We have some themes for you to choose, ex.
+import "@milkdown/crepe/theme/frame.css";
+
+// Or you can create your own theme
+import "./your-theme.css";
+
+const crepe = new Crepe({
+  root: "#app",
+  defaultValue: "# Hello, Milkdown!",
+});
+
+crepe.create().then(() => {
+  console.log("Milkdown is ready!");
+});
+
+// Before unmount
+crepe.destroy();
+\`\`\`
 
 ---
 
-Try editing this content!`);
+## Structure
+
+> 🍼 [Milkdown](https://github.com/Milkdown/milkdown) is a WYSIWYG markdown editor framework.
+>
+> Which means you can build your own markdown editor with Milkdown.
+
+In the real world, a typical milkdown editor is built on top of 3 layers:
+
+- [x] 🥛 Core: The core of Milkdown, which provides the plugin loading system with the editor concepts.
+- [x] 🧇 Plugins: A set of plugins that can be used to extend the functionalities of the editor.
+- [x] 🍮 Components: Some headless components that can be used to build your own editor.
+
+At the start, you may find it hard to understand all these concepts.
+But don't worry, we have this \`@milkdown/crepe\` editor for you to get started quickly.
+
+---
+
+## You can do more with Milkdown
+
+In Milkdown, you can extend the editor in many ways:
+
+| Feature      | Description                                          | Example                   |
+| ------------ | ---------------------------------------------------- | ------------------------- |
+| 🎨 Theme     | Create your own theme with CSS                       | Nord, Dracula             |
+| 🧩 Plugin    | Create your own plugin to extend the editor          | Search, Collab            |
+| 📦 Component | Create your own component to build your own editor   | Slash Menu, Toolbar       |
+| 📚 Syntax    | Create your own syntax to extend the markdown parser | Image with Caption, LaTex |
+
+We have provided a lot of plugins and components, with an out-of-the-box crepe editor for you to use and learn.
+
+---
+
+## Open Source
+
+- Milkdown is an open-source project under the MIT license.
+- Everyone is welcome to contribute to the project, and you can use it in your own project for free.
+- Please let me know what you are building with Milkdown, I would be so glad to see that!
+
+Maintaining Milkdown is a lot of work, and we are working on it in our spare time.
+If you like Milkdown, please consider supporting us by [sponsoring](https://github.com/sponsors/Saul-Mirone) the project.
+We'll be so grateful for your support.
+
+## Who built Milkdown?
+
+Milkdown is built by [Mirone](https://github.com/Saul-Mirone) and designed by [Meo](https://meo.cool).`);
 
 	let currentTheme = $state<'nord' | 'nord-dark' | 'frame' | 'frame-dark'>('nord');
 
@@ -47,6 +97,17 @@ Try editing this content!`);
 	function handleAutoSave(content: string) {
 		console.log('Auto-saved:', content.substring(0, 50) + (content.length > 50 ? '...' : ''));
 	}
+
+	// Store editor instance to handle theme changes
+	let editorInstance: any = $state(null);
+
+	// React to theme changes
+	$effect(() => {
+		if (editorInstance && typeof editorInstance.setTheme === 'function') {
+			editorInstance.setTheme(currentTheme);
+			console.log(`Theme changed to: ${currentTheme}`);
+		}
+	});
 </script>
 
 <main>
@@ -65,6 +126,7 @@ Try editing this content!`);
 	<div class="editor-container">
 		<MilkdownProvider>
 			<MilkdownEditor
+				bind:this={editorInstance}
 				defaultValue={markdownContent}
 				height="400px"
 				placeholder="Start typing your markdown here..."

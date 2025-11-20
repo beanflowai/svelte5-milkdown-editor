@@ -56,13 +56,21 @@ export function useEditorInstance(element: HTMLElement, options: EditorOptions =
 	};
 
 	const setContent = (newContent: string) => {
-		if (instance) {
-			try {
-				setMarkdownContent(instance, newContent);
-				content = newContent;
-			} catch (err) {
-				error = err instanceof Error ? err : new Error('Failed to set content');
-			}
+		if (!instance) {
+			const newError = new Error('Cannot set content: editor instance not available');
+			error = newError;
+			throw newError;
+		}
+
+		try {
+			setMarkdownContent(instance, newContent);
+			content = newContent;
+			console.log('Content successfully updated');
+		} catch (err) {
+			const errorMsg = err instanceof Error ? err.message : 'Unknown error';
+			console.error('Failed to set content:', errorMsg);
+			error = new Error(`Failed to set content: ${errorMsg}`);
+			throw error;
 		}
 	};
 
@@ -77,11 +85,56 @@ export function useEditorInstance(element: HTMLElement, options: EditorOptions =
 		return content;
 	};
 
+	const setTheme = async (newTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark') => {
+		if (!instance || !element) {
+			throw new Error('Cannot set theme: editor instance not available');
+		}
+
+		try {
+			// Validate theme
+			const validThemes = ['nord', 'nord-dark', 'frame', 'frame-dark'];
+			if (!validThemes.includes(newTheme)) {
+				throw new Error(`Invalid theme: ${newTheme}. Valid themes: ${validThemes.join(', ')}`);
+			}
+
+			// Update theme attribute on the editor container
+			element.setAttribute('data-theme', newTheme);
+
+			// Also update the editor container if it exists
+			const editorContainer = element.querySelector('.crepe-editor') as HTMLElement;
+			if (editorContainer) {
+				editorContainer.setAttribute('data-theme', newTheme);
+			}
+
+			// Update any ProseMirror elements
+			const proseMirrorElements = element.querySelectorAll('.ProseMirror');
+			proseMirrorElements.forEach((pmElement) => {
+				(pmElement as HTMLElement).setAttribute('data-theme', newTheme);
+			});
+
+			// Update instance theme property
+			instance.theme = newTheme;
+
+			console.log(`Theme successfully changed to: ${newTheme}`);
+		} catch (err) {
+			const errorMsg = err instanceof Error ? err.message : 'Unknown error';
+			console.error(`Failed to set theme to ${newTheme}:`, errorMsg);
+			error = new Error(`Failed to set theme: ${errorMsg}`);
+			throw error;
+		}
+	};
+
+	const getTheme = (): string => {
+		return instance?.theme || 'nord';
+	};
+
 	return {
 		createInstance,
 		destroyInstance,
 		setContent,
 		getContent,
+		setTheme,
+		getTheme,
 		getInstance: () => instance,
 		getLoading: () => loading,
 		getError: () => error
