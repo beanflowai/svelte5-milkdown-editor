@@ -8,6 +8,9 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
+		"package": "svelte-kit sync && svelte-package -o dist",
+		"prepublishOnly": "npm run package",
+		"publish:dry": "npm publish --dry-run",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
@@ -21,6 +24,7 @@
 		"@eslint/js": "^9.38.0",
 		"@sveltejs/adapter-auto": "^7.0.0",
 		"@sveltejs/kit": "^2.47.1",
+		"@sveltejs/package": "^2.5.4",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"@tailwindcss/vite": "^4.1.12",
 		"@testing-library/jest-dom": "^6.9.1",
@@ -51,16 +55,34 @@
 	"peerDependencies": {
 		"svelte": "^5.0.0"
 	},
+	"svelte": "./dist/index.js",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
+			"svelte": "./dist/index.js",
+			"default": "./dist/index.js"
 		},
+		"./components/MilkdownEditor.svelte": {
+			"types": "./dist/components/MilkdownEditor.svelte.d.ts",
+			"svelte": "./dist/components/MilkdownEditor.svelte",
+			"default": "./dist/components/MilkdownEditor.svelte"
+		},
+		"./components/SplitViewEditor.svelte": {
+			"types": "./dist/components/SplitViewEditor.svelte.d.ts",
+			"svelte": "./dist/components/SplitViewEditor.svelte",
+			"default": "./dist/components/SplitViewEditor.svelte"
+		},
+		"./styles": "./dist/styles/milkdown.css",
 		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist",
-		"README.md"
+		"README.md",
+		"LICENSE",
+		"CHANGELOG.md"
 	],
 	"publishConfig": {
 		"access": "public"
@@ -71,9 +93,14 @@
 		"markdown",
 		"editor",
 		"milkdown",
-		"wysiwyg"
+		"wysiwyg",
+		"rich-text-editor",
+		"markdown-editor",
+		"prosemirror",
+		"split-view",
+		"themes"
 	],
-	"description": "A modern Svelte 5 component library for Milkdown markdown editor",
+	"description": "A modern Svelte 5 component library for Milkdown markdown editor with split view, themes, and auto-save",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/yourusername/svelte5-milkdown-editor.git"

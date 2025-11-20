@@ -1,0 +1,133 @@
+/* Milkdown Crepe Theme Styles */
+/* Import common base styles FIRST - contains all feature styles */
+@import '@milkdown/crepe/theme/common/style.css';
+
+/* Import theme color schemes */
+@import '@milkdown/crepe/theme/nord.css';
+@import '@milkdown/crepe/theme/nord-dark.css';
+@import '@milkdown/crepe/theme/frame.css';
+@import '@milkdown/crepe/theme/frame-dark.css';
+
+/* Theme-specific CSS variables for better control */
+:root {
+    --milkdown-primary-color: #2e3440;
+    --milkdown-bg-color: #ffffff;
+    --milkdown-border-color: #ccc;
+    --milkdown-focus-color: #007bff;
+}
+
+/* Dark theme variables */
+[data-theme="nord-dark"],
+[data-theme="frame-dark"] {
+    --milkdown-primary-color: #d8dee9;
+    --milkdown-bg-color: #2e3440;
+    --milkdown-border-color: #4c566a;
+    --milkdown-focus-color: #5e81ac;
+}
+
+/* Frame theme variables */
+[data-theme="frame"],
+[data-theme="frame-dark"] {
+    --milkdown-primary-color: #1a202c;
+    --milkdown-bg-color: #f7fafc;
+    --milkdown-border-color: #e2e8f0;
+    --milkdown-focus-color: #3182ce;
+}
+
+/* Basic editor styles */
+.milkdown-editor {
+    position: relative;
+    border: 1px solid var(--milkdown-border-color, #ccc);
+    border-radius: 6px;
+    background-color: var(--milkdown-bg-color, #fff);
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.milkdown-editor:focus-within {
+    border-color: var(--milkdown-focus-color, #007bff);
+    box-shadow: 0 0 0 2px var(--milkdown-focus-color, #007bff)40;
+}
+
+.milkdown-editor.error {
+    border-color: #dc3545;
+    background-color: #f8d7da;
+}
+
+.milkdown-editor.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: #666;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message {
+    padding: 1rem;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+/* Ensure ProseMirror content is properly styled */
+.milkdown-editor :global(.ProseMirror) {
+    outline: none;
+    padding: 1rem;
+    min-height: 200px;
+    line-height: 1.6;
+}
+
+.milkdown-editor :global(.ProseMirror p) {
+    margin: 0 0 1em 0;
+}
+
+.milkdown-editor :global(.ProseMirror h1) {
+    font-size: 2em;
+    font-weight: bold;
+    margin: 0.67em 0;
+}
+
+.milkdown-editor :global(.ProseMirror h2) {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0.75em 0;
+}
+
+.milkdown-editor :global(.ProseMirror h3) {
+    font-size: 1.17em;
+    font-weight: bold;
+    margin: 0.83em 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .milkdown-editor {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+}
