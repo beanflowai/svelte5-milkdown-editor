@@ -418,6 +418,8 @@
 		overflow: hidden; /* 外层容器隐藏溢出，让内部编辑器处理滚动 */
 		display: flex;
 		flex-direction: column;
+		min-height: 0; /* 确保flex子元素能正确缩小 */
+		flex: 1; /* 占据剩余空间 */
 	}
 
 	/* Raw text content */

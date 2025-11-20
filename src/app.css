@@ -29,45 +29,34 @@
   /* 确保 ProseMirror 编辑器有正确的滚动行为 */
   overflow-y: auto;
   max-height: 100%;
-  min-height: 200px;
+  min-height: 100%;
+  height: 100%;
   padding: 16px;
   outline: none;
   border: none;
-}
-
-/* 完全隔离列表样式，解决重复项目符号问题 */
-.milkdown-editor .ProseMirror,
-.milkdown-editor .ProseMirror *,
-.milkdown-editor .milkdown,
-.milkdown-editor .milkdown * {
   box-sizing: border-box;
 }
 
-.milkdown-editor .ProseMirror ul,
-.milkdown-editor .ProseMirror ol {
-  /* 强制禁用浏览器默认的项目符号 */
+/* 精确重置浏览器默认样式，保留Milkdown功能样式 */
+.milkdown-editor .ProseMirror {
+  box-sizing: border-box;
+}
+
+/* 只重置浏览器的默认列表样式，但不影响Milkdown的自定义样式 */
+.milkdown-editor .ProseMirror > ul,
+.milkdown-editor .ProseMirror > ol {
+  /* 只重置浏览器默认的项目符号和内边距 */
   list-style-type: none !important;
   padding-left: 0 !important;
   margin: 0 !important;
 }
 
-.milkdown-editor .ProseMirror li {
-  /* 确保列表项没有默认项目符号 */
-  list-style-type: none !important;
-}
-
-/* 针对 Milkdown Crepe 的特定样式类 */
-.milkdown-editor .milkdown-list-item-block,
-.milkdown-editor .milkdown-list-item-block * {
-  list-style-type: none !important;
-}
-
-/* 确保嵌套列表也没有重复项目符号 */
-.milkdown-editor .ProseMirror ul ul,
-.milkdown-editor .ProseMirror ol ol,
-.milkdown-editor .ProseMirror ul ol,
-.milkdown-editor .ProseMirror ol ul {
-  list-style-type: none !important;
-  padding-left: 0 !important;
-  margin: 0 !important;
+/* 保留Milkdown Crepe的自定义列表样式类 */
+.milkdown-editor .ProseMirror .milkdown-list-item-block,
+.milkdown-editor .ProseMirror .milkdown-list-item-block ul,
+.milkdown-editor .ProseMirror .milkdown-list-item-block ol {
+  /* 恢复Milkdown的样式，让它们正常工作 */
+  list-style-type: inherit !important;
+  padding-left: inherit !important;
+  margin-left: inherit !important;
 }
