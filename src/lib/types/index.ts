@@ -2,7 +2,7 @@ import type { Crepe, CrepeFeature } from '@milkdown/crepe';
 
 export interface EditorInstance {
 	crepe: Crepe;
-	theme?: 'nord' | 'frame';
+	theme?: 'nord' | 'nord-dark' | 'frame' | 'frame-dark';
 }
 
 export interface EditorOptions {
@@ -11,7 +11,7 @@ export interface EditorOptions {
 	/** Editor features configuration */
 	features?: Partial<Record<CrepeFeature, boolean>>;
 	/** Theme configuration */
-	theme?: 'nord' | 'frame';
+	theme?: 'nord' | 'nord-dark' | 'frame' | 'frame-dark';
 	/** Placeholder text */
 	placeholder?: string;
 	/** Read-only mode */

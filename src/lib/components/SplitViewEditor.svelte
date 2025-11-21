@@ -7,7 +7,7 @@
 		/** Initial markdown content */
 		defaultValue?: string;
 		/** Editor theme */
-		theme?: 'nord' | 'frame';
+		theme?: 'nord' | 'nord-dark' | 'frame' | 'frame-dark';
 		/** Editor height */
 		height?: string;
 		/** Auto-save configuration */
@@ -113,7 +113,7 @@
 	}
 
 	// Handle theme changes
-	async function setTheme(newTheme: 'nord' | 'frame') {
+	async function setTheme(newTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark') {
 		try {
 			await globalThemeManager.apply(newTheme);
 			// Update split view container theme
@@ -164,10 +164,12 @@
 			<select
 				id="theme-select"
 				bind:value={theme}
-				onchange={(e) => setTheme(e.target.value)}
+				onchange={(e) => setTheme((e.target as HTMLSelectElement).value)}
 			>
 				<option value="nord">Nord</option>
+				<option value="nord-dark">Nord Dark</option>
 				<option value="frame">Frame Light</option>
+				<option value="frame-dark">Frame Dark</option>
 			</select>
 		</div>
 	</div>

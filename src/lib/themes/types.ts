@@ -73,6 +73,8 @@ export interface ThemeRegistry {
 	register(theme: ThemeDefinition): void;
 	/** Get all registered themes */
 	getAll(): ThemeDefinition[];
+	/** Get all registered theme names */
+	getNames(): ThemeName[];
 	/** Check if theme exists */
 	has(name: ThemeName): boolean;
 }

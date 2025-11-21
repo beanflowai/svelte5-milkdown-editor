@@ -17,6 +17,8 @@ export { ThemeManager, globalThemeManager } from './manager';
 // 导出内置主题
 export { frameTheme } from './themes/frame';
 export { nordTheme } from './themes/nord';
+export { frameDarkTheme } from './themes/frame-dark';
+export { nordDarkTheme } from './themes/nord-dark';
 
 /**
  * 便捷函数：获取当前主题管理器
@@ -54,6 +56,12 @@ export function initializeThemes() {
 		});
 		import('./themes/nord').then(({ nordTheme }) => {
 			globalThemeRegistry.register(nordTheme);
+		});
+		import('./themes/frame-dark').then(({ frameDarkTheme }) => {
+			globalThemeRegistry.register(frameDarkTheme);
+		});
+		import('./themes/nord-dark').then(({ nordDarkTheme }) => {
+			globalThemeRegistry.register(nordDarkTheme);
 		});
 	}
 }

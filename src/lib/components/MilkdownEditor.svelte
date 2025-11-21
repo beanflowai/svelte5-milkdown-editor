@@ -23,7 +23,7 @@
 		/** Minimum height */
 		minHeight?: string;
 		/** Theme */
-		theme?: 'nord' | 'frame';
+		theme?: 'nord' | 'nord-dark' | 'frame' | 'frame-dark';
 		/** Auto-save configuration */
 		autosave?: {
 			enabled: boolean;
