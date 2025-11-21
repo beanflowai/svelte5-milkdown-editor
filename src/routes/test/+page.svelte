@@ -4,7 +4,7 @@
 	import { initializeThemes } from '$lib/themes';
 
 	// 响应式状态
-	let currentTheme = 'nord';
+	let currentTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark' = 'nord';
 	let externalStylesEnabled = false;
 	let editorInstance: any = null;
 
@@ -64,7 +64,7 @@ function testStyleIsolation() {
 	// 主题切换处理
 	function handleThemeChange(event: Event) {
 		const select = event.target as HTMLSelectElement;
-		currentTheme = select.value;
+		currentTheme = select.value as 'nord' | 'nord-dark' | 'frame' | 'frame-dark';
 	}
 
 	// 外部样式切换

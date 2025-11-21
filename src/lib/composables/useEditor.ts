@@ -1,7 +1,7 @@
 import { getContext, onMount, onDestroy } from 'svelte';
 import type { EditorContextValue, EditorOptions, EditorInstance } from '../types';
 import { createEditor, destroyEditor, getMarkdownContent, setMarkdownContent } from '../utils/editor';
-import { globalThemeManager } from '../themes';
+import { setTheme as setGlobalTheme, type ThemeName } from '../themes';
 
 export function useEditor() {
 	const context = getContext<EditorContextValue>('milkdown');
@@ -86,39 +86,10 @@ export function useEditorInstance(element: HTMLElement, options: EditorOptions =
 		return content;
 	};
 
-	const setTheme = async (newTheme: 'nord' | 'frame') => {
-		if (!instance || !element) {
-			throw new Error('Cannot set theme: editor instance not available');
-		}
-
-		try {
-			// Use new theme manager
-			await globalThemeManager.apply(newTheme);
-
-			// Update theme attribute on the editor container
-			element.setAttribute('data-theme', newTheme);
-
-			// Also update the editor container if it exists
-			const editorContainer = element.querySelector('.crepe-editor') as HTMLElement;
-			if (editorContainer) {
-				editorContainer.setAttribute('data-theme', newTheme);
-			}
-
-			// Update any ProseMirror elements
-			const proseMirrorElements = element.querySelectorAll('.ProseMirror');
-			proseMirrorElements.forEach((pmElement) => {
-				(pmElement as HTMLElement).setAttribute('data-theme', newTheme);
-			});
-
-			// Update instance theme property
+	const setTheme = (newTheme: ThemeName) => {
+		setGlobalTheme(newTheme);
+		if (instance) {
 			instance.theme = newTheme;
-
-			console.log(`Theme successfully changed to: ${newTheme}`);
-		} catch (err) {
-			const errorMsg = err instanceof Error ? err.message : 'Unknown error';
-			console.error(`Failed to set theme to ${newTheme}:`, errorMsg);
-			error = new Error(`Failed to set theme: ${errorMsg}`);
-			throw error;
 		}
 	};
 

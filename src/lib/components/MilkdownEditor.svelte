@@ -2,7 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import type { EditorOptions } from '../types';
 	import { useEditorInstance } from '../composables/useEditor';
-	import { globalThemeRegistry, ThemeManager } from '../themes';
+	import { initializeThemeManager, setTheme as setGlobalTheme, type ThemeName } from '../themes';
 	import '../styles/milkdown.css';
 
 	interface Props {
@@ -69,25 +69,13 @@
 	let lastKnownContent = $state('');
 	let pendingAutoSave = $state(false);
 
-	// Create local theme manager for this editor instance
-	let localThemeManager: ThemeManager;
+	// 主题管理器初始化状态
+	let themeInitialized = $state(false);
 
-	// Apply theme using local theme manager
+	// 当 theme prop 变化时，切换主题样式表
 	$effect(() => {
-		if (theme && localThemeManager && editorElement) {
-			// 确保编辑器DOM已准备就绪后立即应用主题
-			try {
-				localThemeManager.apply(theme);
-			} catch (error) {
-				console.warn('Failed to apply theme:', error);
-			}
-		}
-	});
-
-	// Set theme data attribute on editor element
-	$effect(() => {
-		if (editorElement && theme) {
-			editorElement.setAttribute('data-theme', theme);
+		if (themeInitialized && theme) {
+			setGlobalTheme(theme);
 		}
 	});
 
@@ -146,8 +134,9 @@
 			loading = true;
 			error = null;
 
-			// Create local theme manager for this editor instance
-			localThemeManager = new ThemeManager(globalThemeRegistry, editorElement);
+			// 初始化主题样式表管理器
+			await initializeThemeManager(theme);
+			themeInitialized = true;
 
 			editorAPI = useEditorInstance(editorElement, mergedOptions);
 			await editorAPI.createInstance();
@@ -155,11 +144,6 @@
 			// Update state
 			instance = editorAPI.getInstance();
 			loading = false;
-
-			// Apply initial theme immediately after editor creation
-			if (theme && localThemeManager) {
-				localThemeManager.apply(theme);
-			}
 
 			// Initialize last known content
 			lastKnownContent = editorAPI.getContent();
@@ -247,22 +231,12 @@
 		editorElement?.blur();
 	}
 
-	export async function setTheme(newTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark') {
-		try {
-			if (localThemeManager) {
-				await localThemeManager.apply(newTheme);
-			}
-			if (editorElement) {
-				editorElement.setAttribute('data-theme', newTheme);
-			}
-		} catch (error) {
-			console.error('Failed to set theme:', error);
-			throw error;
-		}
+	export function setTheme(newTheme: ThemeName) {
+		setGlobalTheme(newTheme);
 	}
 
-	export function getTheme(): string {
-		return localThemeManager?.getCurrentName() || theme || 'nord';
+	export function getTheme(): ThemeName {
+		return theme;
 	}
 </script>
 

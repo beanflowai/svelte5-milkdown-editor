@@ -1,7 +1,7 @@
 <script lang="ts">
 	import MilkdownEditor from './MilkdownEditor.svelte';
 	import type { EditorOptions } from '../types';
-	import { globalThemeManager } from '../themes';
+	import { setTheme as setGlobalTheme, type ThemeName } from '../themes';
 
 	interface Props {
 		/** Initial markdown content */
@@ -113,17 +113,8 @@
 	}
 
 	// Handle theme changes
-	async function setTheme(newTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark') {
-		try {
-			await globalThemeManager.apply(newTheme);
-			// Update split view container theme
-			const container = document.querySelector('.split-view-container');
-			if (container) {
-				container.setAttribute('data-theme', newTheme);
-			}
-		} catch (error) {
-			console.error('Failed to set theme:', error);
-		}
+	function setTheme(newTheme: ThemeName) {
+		setGlobalTheme(newTheme);
 	}
 </script>
 
