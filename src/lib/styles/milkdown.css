@@ -13,7 +13,7 @@
     border: 1px solid var(--milkdown-border-color, #ccc);
     border-radius: 6px;
     background-color: var(--milkdown-bg-color, #fff);
-    overflow: hidden;
+    overflow: auto;
     transition: border-color 0.2s ease;
 }
 
@@ -71,6 +71,8 @@
     outline: none;
     padding: 1rem;
     min-height: 200px;
+    height: 100%;
+    overflow-y: auto;
     line-height: 1.6;
 }
 

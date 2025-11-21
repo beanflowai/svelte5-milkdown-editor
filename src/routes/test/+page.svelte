@@ -8,93 +8,93 @@
 	let externalStylesEnabled = false;
 	let editorInstance: any = null;
 
-	// 测试用的 Markdown 内容
-	const testMarkdown = `# Milkdown 编辑器样式隔离测试
+	// Test Markdown content
+	const testMarkdown = `# Milkdown Editor Style Isolation Test
 
-## 这是一个测试页面
+## This is a Test Page
 
-本文档用于测试 **样式隔离** 和 **主题切换** 功能。
+This document is used to test **style isolation** and **theme switching** functionality.
 
-### 测试内容包括：
+### Test Content Includes:
 
-1. **样式隔离测试** - 验证外部样式不会影响编辑器
-2. **主题切换测试** - 测试 4 种主题的切换效果
-3. **编辑功能测试** - 验证基础编辑功能正常
+1. **Style Isolation Test** - Verify that external styles do not affect the editor
+2. **Theme Switching Test** - Test the switching effect of 4 themes
+3. **Editing Functionality Test** - Verify that basic editing functions work properly
 
-### 代码块测试
+### Code Block Test
 
 \`\`\`javascript
 function testStyleIsolation() {
-    console.log('测试样式隔离功能');
-    return '外部样式不应该影响这里';
+    console.log('Testing style isolation functionality');
+    return 'External styles should not affect here';
 }
 \`\`\`
 
-### 列表和格式测试
+### List and Format Test
 
-- **粗体文本** 测试
-- *斜体文本* 测试
-- \`行内代码\` 测试
+- **Bold text** test
+- *Italic text* test
+- \`Inline code\` test
 
-| 功能 | 状态 | 说明 |
-|------|------|------|
-| 样式隔离 | ✅ | 外部样式不影响编辑器 |
-| 主题切换 | ✅ | 支持四种主题 |
-| 编辑功能 | ✅ | 基础功能正常 |
+| Feature | Status | Description |
+|---------|--------|-------------|
+| Style Isolation | ✅ | External styles do not affect the editor |
+| Theme Switching | ✅ | Support for four themes |
+| Editing Functions | ✅ | Basic functions work properly |
 
-> 💡 **提示**: 尝试切换不同的主题，并启用/禁用外部样式来观察隔离效果。
+> 💡 **Tip**: Try switching different themes and enable/disable external styles to observe isolation effects.
 
 ---
 
-🧪 **样式隔离和主题切换测试页面**`;
+🧪 **Style Isolation and Theme Switching Test Page**`;
 
-	// 主题选项
+	// Theme options
 	const themes = [
-		{ value: 'nord', label: 'Nord', description: '明亮的 Nord 主题' },
-		{ value: 'nord-dark', label: 'Nord Dark', description: '暗色 Nord 主题' },
-		{ value: 'frame', label: 'Frame', description: '明亮的 Frame 主题' },
-		{ value: 'frame-dark', label: 'Frame Dark', description: '暗色 Frame 主题' }
+		{ value: 'nord', label: 'Nord', description: 'Bright Nord theme' },
+		{ value: 'nord-dark', label: 'Nord Dark', description: 'Dark Nord theme' },
+		{ value: 'frame', label: 'Frame', description: 'Bright Frame theme' },
+		{ value: 'frame-dark', label: 'Frame Dark', description: 'Dark Frame theme' }
 	];
 
-	// 初始化主题系统
+	// Initialize theme system
 	onMount(() => {
 		initializeThemes();
 	});
 
-	// 主题切换处理
+	// Theme switching handler
 	function handleThemeChange(event: Event) {
 		const select = event.target as HTMLSelectElement;
 		currentTheme = select.value as 'nord' | 'nord-dark' | 'frame' | 'frame-dark';
 	}
 
-	// 外部样式切换
+	// External styles toggle
 	function toggleExternalStyles() {
 		externalStylesEnabled = !externalStylesEnabled;
 	}
 
-	// 编辑器事件处理
+	// Editor event handlers
 	function handleReady(instance: any) {
 		editorInstance = instance;
-		console.log('测试编辑器已准备就绪:', instance);
+		console.log('Test editor ready:', instance);
 	}
 
 	function handleError(error: Error) {
-		console.error('编辑器错误:', error);
+		console.error('Editor error:', error);
 	}
 
 	function handleChange(content: string) {
-		console.log('内容变化:', content.substring(0, 50) + '...');
+		console.log('Content changed:', content.substring(0, 50) + '...');
 	}
 </script>
 
 <svelte:head>
-	<title>Milkdown 编辑器测试页面</title>
+	<title>Milkdown Editor Test Page</title>
 </svelte:head>
 
-<!-- 外部样式测试 - 这些样式应该被隔离 -->
+<!-- External styles test - these styles should be isolated -->
 {#if externalStylesEnabled}
 	<div class="external-styles-test">
-		<!-- 这些是可能冲突的外部样式 -->
+		<!-- These are potentially conflicting external styles -->
 		<style>
 			:global(p) {
 				color: red !important;
@@ -151,15 +151,15 @@ function testStyleIsolation() {
 {/if}
 
 <div class="test-page">
-	<!-- 测试控制面板 -->
+	<!-- Test control panel -->
 	<div class="control-panel">
-		<h1>🧪 Milkdown 编辑器测试页面</h1>
-		<p class="subtitle">测试样式隔离和主题切换功能</p>
+		<h1>🧪 Milkdown Editor Test Page</h1>
+		<p class="subtitle">Testing style isolation and theme switching functionality</p>
 
 		<div class="controls">
-			<!-- 主题选择 -->
+			<!-- Theme selection -->
 			<div class="control-group">
-				<label for="theme-select">主题选择:</label>
+				<label for="theme-select">Theme Selection:</label>
 				<select id="theme-select" value={currentTheme} on:change={handleThemeChange}>
 					{#each themes as theme}
 						<option value={theme.value}>{theme.label} - {theme.description}</option>
@@ -167,7 +167,7 @@ function testStyleIsolation() {
 				</select>
 			</div>
 
-			<!-- 外部样式控制 -->
+			<!-- External styles control -->
 			<div class="control-group">
 				<label>
 					<input
@@ -175,35 +175,35 @@ function testStyleIsolation() {
 						checked={externalStylesEnabled}
 						on:change={toggleExternalStyles}
 					/>
-					启用外部样式污染测试
+					Enable external style pollution test
 				</label>
 				<small class="help-text">
-					启用后会添加可能冲突的全局样式，用于测试样式隔离效果
+					When enabled, adds potentially conflicting global styles to test style isolation effects
 				</small>
 			</div>
 		</div>
 
-		<!-- 测试说明 -->
+		<!-- Test instructions -->
 		<div class="test-info">
-			<h3>测试指南:</h3>
+			<h3>Test Guide:</h3>
 			<ul>
-				<li><strong>样式隔离测试</strong>: 启用外部样式后，编辑器内部样式不应该被影响</li>
-				<li><strong>主题切换测试</strong>: 切换不同主题，观察编辑器样式实时变化</li>
-				<li><strong>编辑功能测试</strong>: 测试输入、格式化等基础编辑功能</li>
+				<li><strong>Style Isolation Test</strong>: After enabling external styles, editor internal styles should not be affected</li>
+				<li><strong>Theme Switching Test</strong>: Switch between different themes and observe real-time style changes in the editor</li>
+				<li><strong>Editing Functionality Test</strong>: Test basic editing functions like typing and formatting</li>
 			</ul>
 		</div>
 	</div>
 
-	<!-- 编辑器测试区域 -->
+	<!-- Editor test area -->
 	<div class="editor-section">
-		<h2>编辑器测试区域</h2>
+		<h2>Editor Test Area</h2>
 		<div class="editor-container" data-theme={currentTheme}>
 			<MilkdownEditor
 				id="test-editor"
 				defaultValue={testMarkdown}
 				theme={currentTheme}
 				height="600px"
-				placeholder="在这里输入测试内容..."
+				placeholder="Enter test content here..."
 				onReady={handleReady}
 				onError={handleError}
 				onChange={handleChange}
@@ -211,37 +211,37 @@ function testStyleIsolation() {
 		</div>
 	</div>
 
-	<!-- 外部样式影响展示区域 -->
+	<!-- External style influence display area -->
 	{#if externalStylesEnabled}
 		<div class="external-test-area">
-			<h3>外部样式影响展示</h3>
-			<p>这是一个普通段落，应该被外部样式影响（红色文字、橙色虚线边框）</p>
-			<div>这是一个普通的 div，应该有蓝色边框</div>
-			<h1>这是一个标题，应该是紫色并带下划线</h1>
-			<code>这是行内代码，应该是黄色背景黑色文字</code>
-			<pre>这是代码块，应该是绿色背景红色虚线边框</pre>
-			<strong>这是粗体，应该是绿色文字</strong>
-			<em>这是斜体，应该是橙色文字</em>
+			<h3>External Style Influence Display</h3>
+			<p>This is a regular paragraph, should be affected by external styles (red text, orange dashed border)</p>
+			<div>This is a regular div, should have blue border</div>
+			<h1>This is a heading, should be purple with underline</h1>
+			<code>This is inline code, should have yellow background with black text</code>
+			<pre>This is a code block, should have green background with red dashed border</pre>
+			<strong>This is bold text, should be green</strong>
+			<em>This is italic text, should be orange</em>
 			<ul>
-				<li>列表项应该是棕色</li>
+				<li>List items should be brown</li>
 			</ul>
 		</div>
 	{/if}
 
-	<!-- 测试结果 -->
+	<!-- Test results -->
 	<div class="test-results">
-		<h3>测试结果:</h3>
+		<h3>Test Results:</h3>
 		<div class="result-item">
-			<span class="label">当前主题:</span>
+			<span class="label">Current Theme:</span>
 			<span class="value">{currentTheme}</span>
 		</div>
 		<div class="result-item">
-			<span class="label">外部样式:</span>
-			<span class="value">{externalStylesEnabled ? '已启用（应被隔离）' : '已禁用'}</span>
+			<span class="label">External Styles:</span>
+			<span class="value">{externalStylesEnabled ? 'Enabled (should be isolated)' : 'Disabled'}</span>
 		</div>
 		<div class="result-item">
-			<span class="label">编辑器状态:</span>
-			<span class="value">{editorInstance ? '已初始化' : '等待初始化'}</span>
+			<span class="label">Editor Status:</span>
+			<span class="value">{editorInstance ? 'Initialized' : 'Waiting for initialization'}</span>
 		</div>
 	</div>
 </div>
@@ -350,6 +350,7 @@ function testStyleIsolation() {
 		border: 1px solid #e2e8f0;
 		border-radius: 6px;
 		overflow: hidden;
+		min-height: 600px;
 	}
 
 	.external-test-area {
@@ -398,7 +399,7 @@ function testStyleIsolation() {
 		font-family: monospace;
 	}
 
-	/* 响应式设计 */
+	/* Responsive design */
 	@media (max-width: 768px) {
 		.test-page {
 			padding: 1rem;
@@ -421,7 +422,7 @@ function testStyleIsolation() {
 		}
 	}
 
-	/* 深色模式支持 */
+	/* Dark mode support */
 	@media (prefers-color-scheme: dark) {
 		.test-page {
 			background: #0f172a;
