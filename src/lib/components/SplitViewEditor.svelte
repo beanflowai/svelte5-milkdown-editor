@@ -1,12 +1,13 @@
 <script lang="ts">
 	import MilkdownEditor from './MilkdownEditor.svelte';
 	import type { EditorOptions } from '../types';
+	import { globalThemeManager } from '../themes';
 
 	interface Props {
 		/** Initial markdown content */
 		defaultValue?: string;
 		/** Editor theme */
-		theme?: 'nord' | 'nord-dark' | 'frame' | 'frame-dark';
+		theme?: 'nord' | 'frame';
 		/** Editor height */
 		height?: string;
 		/** Auto-save configuration */
@@ -112,9 +113,16 @@
 	}
 
 	// Handle theme changes
-	function setTheme(newTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark') {
-		if (editorInstance && typeof editorInstance.setTheme === 'function') {
-			editorInstance.setTheme(newTheme);
+	async function setTheme(newTheme: 'nord' | 'frame') {
+		try {
+			await globalThemeManager.apply(newTheme);
+			// Update split view container theme
+			const container = document.querySelector('.split-view-container');
+			if (container) {
+				container.setAttribute('data-theme', newTheme);
+			}
+		} catch (error) {
+			console.error('Failed to set theme:', error);
 		}
 	}
 </script>
@@ -159,9 +167,7 @@
 				onchange={(e) => setTheme(e.target.value)}
 			>
 				<option value="nord">Nord</option>
-				<option value="nord-dark">Nord Dark</option>
 				<option value="frame">Frame Light</option>
-				<option value="frame-dark">Frame Dark</option>
 			</select>
 		</div>
 	</div>
@@ -538,20 +544,19 @@
 		}
 	}
 
-	/* Theme-specific variables */
-	.split-view-container[data-theme="nord-dark"],
-	.split-view-container[data-theme="frame-dark"] {
-		--toolbar-bg: #2e3440;
-		--pane-header-bg: #3b4252;
-		--button-bg: #4c566a;
-		--button-color: #d8dee9;
-		--button-hover-bg: #5e81ac;
-		--button-hover-border: #5e81ac;
-		--code-bg: #3b4252;
-		--status-bar-bg: #2e3440;
-		--text-muted: #8890a4;
-		--border-color: #4c566a;
-		--resize-handle-bg: #4c566a;
-		--resize-handle-indicator: #8890a4;
+	/* Theme-specific variables for frame theme */
+	.split-view-container[data-theme="frame"] {
+		--toolbar-bg: #f8f9fa;
+		--pane-header-bg: #ffffff;
+		--button-bg: #ffffff;
+		--button-color: #333333;
+		--button-hover-bg: #e9ecef;
+		--button-hover-border: #dee2e6;
+		--code-bg: #f8f9fa;
+		--status-bar-bg: #f8f9fa;
+		--text-muted: #6c757d;
+		--border-color: #dee2e6;
+		--resize-handle-bg: #dee2e6;
+		--resize-handle-indicator: #adb5bd;
 	}
 </style>

@@ -2,11 +2,9 @@
 /* Import common base styles FIRST - contains all feature styles */
 @import '@milkdown/crepe/theme/common/style.css';
 
-/* Import theme color schemes */
+/* Import only the themes we support */
 @import '@milkdown/crepe/theme/nord.css';
-@import '@milkdown/crepe/theme/nord-dark.css';
 @import '@milkdown/crepe/theme/frame.css';
-@import '@milkdown/crepe/theme/frame-dark.css';
 
 /* Theme-specific CSS variables for better control */
 :root {
@@ -16,18 +14,8 @@
     --milkdown-focus-color: #007bff;
 }
 
-/* Dark theme variables */
-[data-theme="nord-dark"],
-[data-theme="frame-dark"] {
-    --milkdown-primary-color: #d8dee9;
-    --milkdown-bg-color: #2e3440;
-    --milkdown-border-color: #4c566a;
-    --milkdown-focus-color: #5e81ac;
-}
-
 /* Frame theme variables */
-[data-theme="frame"],
-[data-theme="frame-dark"] {
+[data-theme="frame"] {
     --milkdown-primary-color: #1a202c;
     --milkdown-bg-color: #f7fafc;
     --milkdown-border-color: #e2e8f0;

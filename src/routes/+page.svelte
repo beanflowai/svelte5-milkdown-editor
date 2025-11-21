@@ -1,6 +1,13 @@
 <script lang="ts">
 	import { MilkdownProvider } from '$lib';
 	import SplitViewEditor from '$lib/components/SplitViewEditor.svelte';
+	import { initializeThemes } from '$lib/themes';
+	import { onMount } from 'svelte';
+
+	// 初始化主题系统
+	onMount(() => {
+		initializeThemes();
+	});
 
 	const defaultMarkdown = `# Milkdown Split View Editor
 

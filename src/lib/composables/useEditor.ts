@@ -1,6 +1,7 @@
 import { getContext, onMount, onDestroy } from 'svelte';
 import type { EditorContextValue, EditorOptions, EditorInstance } from '../types';
 import { createEditor, destroyEditor, getMarkdownContent, setMarkdownContent } from '../utils/editor';
+import { globalThemeManager } from '../themes';
 
 export function useEditor() {
 	const context = getContext<EditorContextValue>('milkdown');
@@ -85,17 +86,14 @@ export function useEditorInstance(element: HTMLElement, options: EditorOptions =
 		return content;
 	};
 
-	const setTheme = async (newTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark') => {
+	const setTheme = async (newTheme: 'nord' | 'frame') => {
 		if (!instance || !element) {
 			throw new Error('Cannot set theme: editor instance not available');
 		}
 
 		try {
-			// Validate theme
-			const validThemes = ['nord', 'nord-dark', 'frame', 'frame-dark'];
-			if (!validThemes.includes(newTheme)) {
-				throw new Error(`Invalid theme: ${newTheme}. Valid themes: ${validThemes.join(', ')}`);
-			}
+			// Use new theme manager
+			await globalThemeManager.apply(newTheme);
 
 			// Update theme attribute on the editor container
 			element.setAttribute('data-theme', newTheme);

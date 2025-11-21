@@ -5,9 +5,7 @@ export async function createEditor(element: HTMLElement, options: EditorOptions 
 	// Map theme names to CSS class names
 	const themeClassMap = {
 		'nord': 'nord',
-		'nord-dark': 'nord-dark',
-		'frame': 'frame',
-		'frame-dark': 'frame-dark'
+		'frame': 'frame'
 	};
 
 	const crepe = new Crepe({

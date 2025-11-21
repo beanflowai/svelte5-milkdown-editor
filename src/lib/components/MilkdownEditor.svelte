@@ -2,6 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import type { EditorOptions } from '../types';
 	import { useEditorInstance } from '../composables/useEditor';
+	import { globalThemeManager } from '../themes';
 	import '../styles/milkdown.css';
 
 	interface Props {
@@ -22,7 +23,7 @@
 		/** Minimum height */
 		minHeight?: string;
 		/** Theme */
-		theme?: 'nord' | 'nord-dark' | 'frame' | 'frame-dark';
+		theme?: 'nord' | 'frame';
 		/** Auto-save configuration */
 		autosave?: {
 			enabled: boolean;
@@ -68,21 +69,17 @@
 	let lastKnownContent = $state('');
 	let pendingAutoSave = $state(false);
 
-	// Apply theme to DOM element and editor instance
+	// Apply theme using new theme manager
 	$effect(() => {
-		if (editorElement && editorAPI) {
-			editorElement.setAttribute('data-theme', theme);
-			editorAPI.setTheme(theme);
+		if (theme) {
+			globalThemeManager.apply(theme);
 		}
 	});
 
-	// Handle theme changes
+	// Set theme data attribute on editor element
 	$effect(() => {
-		if (editorAPI && instance) {
-			const currentTheme = editorAPI.getTheme();
-			if (currentTheme !== theme) {
-				editorAPI.setTheme(theme);
-			}
+		if (editorElement && theme) {
+			editorElement.setAttribute('data-theme', theme);
 		}
 	});
 
@@ -234,14 +231,20 @@
 		editorElement?.blur();
 	}
 
-	export function setTheme(newTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark') {
-		if (editorAPI) {
-			editorAPI.setTheme(newTheme);
+	export async function setTheme(newTheme: 'nord' | 'frame') {
+		try {
+			await globalThemeManager.apply(newTheme);
+			if (editorElement) {
+				editorElement.setAttribute('data-theme', newTheme);
+			}
+		} catch (error) {
+			console.error('Failed to set theme:', error);
+			throw error;
 		}
 	}
 
 	export function getTheme(): string {
-		return editorAPI?.getTheme() || theme;
+		return globalThemeManager.getCurrentName() || theme || 'nord';
 	}
 </script>
 
