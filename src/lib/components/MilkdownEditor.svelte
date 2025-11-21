@@ -74,15 +74,13 @@
 
 	// Apply theme using local theme manager
 	$effect(() => {
-		if (theme && localThemeManager) {
-			// 延迟应用主题，确保编辑器DOM已准备就绪
-			setTimeout(() => {
-				try {
-					localThemeManager.apply(theme);
-				} catch (error) {
-					console.warn('Failed to apply theme:', error);
-				}
-			}, 0);
+		if (theme && localThemeManager && editorElement) {
+			// 确保编辑器DOM已准备就绪后立即应用主题
+			try {
+				localThemeManager.apply(theme);
+			} catch (error) {
+				console.warn('Failed to apply theme:', error);
+			}
 		}
 	});
 
@@ -157,6 +155,11 @@
 			// Update state
 			instance = editorAPI.getInstance();
 			loading = false;
+
+			// Apply initial theme immediately after editor creation
+			if (theme && localThemeManager) {
+				localThemeManager.apply(theme);
+			}
 
 			// Initialize last known content
 			lastKnownContent = editorAPI.getContent();

@@ -28,7 +28,7 @@ export class CssThemeInjector implements ThemeInjector {
 
 		const { colors, fonts, shadows } = theme;
 
-		// 应用颜色变量
+		// 应用颜色变量 - 使用Milkdown Crepe原生的变量名
 		this.rootElement.style.setProperty('--crepe-color-background', colors.background);
 		this.rootElement.style.setProperty('--crepe-color-on-background', colors.onBackground);
 		this.rootElement.style.setProperty('--crepe-color-surface', colors.surface);
@@ -77,7 +77,7 @@ export class CssThemeInjector implements ThemeInjector {
 	 */
 	remove(): void {
 		const properties = [
-			// 颜色变量
+			// 颜色变量 - 使用Milkdown Crepe原生的变量名
 			'--crepe-color-background',
 			'--crepe-color-on-background',
 			'--crepe-color-surface',
