@@ -7,7 +7,14 @@ export class CssThemeInjector implements ThemeInjector {
 	private currentTheme: ThemeDefinition | undefined;
 	private readonly rootElement: HTMLElement;
 
-	constructor(rootElement: HTMLElement = typeof document !== 'undefined' ? document.documentElement : null as any) {
+	constructor(rootElement?: HTMLElement) {
+		// 如果没有提供根元素，尝试找到编辑器容器
+		if (!rootElement && typeof document !== 'undefined') {
+			// 优先查找编辑器容器，如果找不到则使用根元素
+			rootElement = document.querySelector('.milkdown-editor') as HTMLElement ||
+				document.querySelector('.milkdown') as HTMLElement ||
+				document.documentElement;
+		}
 		this.rootElement = rootElement;
 	}
 

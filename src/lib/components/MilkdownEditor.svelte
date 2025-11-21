@@ -2,7 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import type { EditorOptions } from '../types';
 	import { useEditorInstance } from '../composables/useEditor';
-	import { globalThemeManager } from '../themes';
+	import { globalThemeRegistry, ThemeManager } from '../themes';
 	import '../styles/milkdown.css';
 
 	interface Props {
@@ -69,10 +69,20 @@
 	let lastKnownContent = $state('');
 	let pendingAutoSave = $state(false);
 
-	// Apply theme using new theme manager
+	// Create local theme manager for this editor instance
+	let localThemeManager: ThemeManager;
+
+	// Apply theme using local theme manager
 	$effect(() => {
-		if (theme) {
-			globalThemeManager.apply(theme);
+		if (theme && localThemeManager) {
+			// 延迟应用主题，确保编辑器DOM已准备就绪
+			setTimeout(() => {
+				try {
+					localThemeManager.apply(theme);
+				} catch (error) {
+					console.warn('Failed to apply theme:', error);
+				}
+			}, 0);
 		}
 	});
 
@@ -137,6 +147,9 @@
 		try {
 			loading = true;
 			error = null;
+
+			// Create local theme manager for this editor instance
+			localThemeManager = new ThemeManager(globalThemeRegistry, editorElement);
 
 			editorAPI = useEditorInstance(editorElement, mergedOptions);
 			await editorAPI.createInstance();
@@ -231,9 +244,11 @@
 		editorElement?.blur();
 	}
 
-	export async function setTheme(newTheme: 'nord' | 'frame') {
+	export async function setTheme(newTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark') {
 		try {
-			await globalThemeManager.apply(newTheme);
+			if (localThemeManager) {
+				await localThemeManager.apply(newTheme);
+			}
 			if (editorElement) {
 				editorElement.setAttribute('data-theme', newTheme);
 			}
@@ -244,7 +259,7 @@
 	}
 
 	export function getTheme(): string {
-		return globalThemeManager.getCurrentName() || theme || 'nord';
+		return localThemeManager?.getCurrentName() || theme || 'nord';
 	}
 </script>
 

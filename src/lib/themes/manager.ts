@@ -1,6 +1,5 @@
 import type { ThemeDefinition, ThemeName, ThemeRegistry } from './types';
 import { CssThemeInjector } from './injector';
-import { globalThemeRegistry } from './registry';
 
 /**
  * 主题管理器 - 统一管理主题的注册和应用
@@ -11,10 +10,23 @@ export class ThemeManager {
 	private currentTheme: ThemeDefinition | undefined;
 
 	constructor(
-		registry: ThemeRegistry = globalThemeRegistry,
+		registry?: ThemeRegistry,
 		rootElement: HTMLElement = typeof document !== 'undefined' ? document.documentElement : null as any
 	) {
-		this.registry = registry;
+		// 如果没有提供注册器，需要延迟初始化
+		this.registry = registry || (typeof window !== 'undefined' ?
+			(() => {
+				// 延迟导入以避免循环依赖
+				try {
+					const { globalThemeRegistry } = require('./index');
+					return globalThemeRegistry;
+				} catch {
+					// 如果无法导入，创建一个临时的注册器实例
+					const { ThemeRegistryImpl } = require('./registry');
+					return new ThemeRegistryImpl();
+				}
+			})() : null as any
+		);
 		this.injector = new CssThemeInjector(rootElement);
 	}
 
@@ -160,22 +172,4 @@ export class ThemeManager {
 	}
 }
 
-/**
- * 全局主题管理器实例 - 延迟初始化以支持SSR
- */
-let globalThemeManagerInstance: ThemeManager | null = null;
-
-export const globalThemeManager = new Proxy({} as ThemeManager, {
-	get(target, prop) {
-		if (!globalThemeManagerInstance && typeof window !== 'undefined') {
-			globalThemeManagerInstance = new ThemeManager();
-		}
-		return globalThemeManagerInstance?.[prop as keyof ThemeManager];
-	},
-	has(target, prop) {
-		if (!globalThemeManagerInstance && typeof window !== 'undefined') {
-			globalThemeManagerInstance = new ThemeManager();
-		}
-		return globalThemeManagerInstance ? prop in globalThemeManagerInstance : false;
-	}
-});
+// 注意：全局实例现在在 index.ts 中管理以避免循环依赖

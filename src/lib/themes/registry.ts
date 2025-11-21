@@ -66,22 +66,4 @@ export class ThemeRegistryImpl implements ThemeRegistry {
 	}
 }
 
-/**
- * 全局主题注册器实例 - 延迟初始化以支持SSR
- */
-let globalThemeRegistryInstance: ThemeRegistryImpl | null = null;
-
-export const globalThemeRegistry = new Proxy({} as ThemeRegistryImpl, {
-	get(target, prop) {
-		if (!globalThemeRegistryInstance && typeof window !== 'undefined') {
-			globalThemeRegistryInstance = new ThemeRegistryImpl();
-		}
-		return globalThemeRegistryInstance?.[prop as keyof ThemeRegistryImpl];
-	},
-	has(target, prop) {
-		if (!globalThemeRegistryInstance && typeof window !== 'undefined') {
-			globalThemeRegistryInstance = new ThemeRegistryImpl();
-		}
-		return globalThemeRegistryInstance ? prop in globalThemeRegistryInstance : false;
-	}
-});
+// 注意：全局实例现在在 index.ts 中管理以避免循环依赖
