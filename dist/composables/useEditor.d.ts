@@ -1,4 +1,5 @@
 import type { EditorOptions, EditorInstance } from '../types';
+import { type ThemeName } from '../themes';
 export declare function useEditor(): {
     instance: EditorInstance | null;
     loading: boolean;
@@ -11,7 +12,7 @@ export declare function useEditorInstance(element: HTMLElement, options?: Editor
     destroyInstance: () => void;
     setContent: (newContent: string) => void;
     getContent: () => string;
-    setTheme: (newTheme: "nord" | "nord-dark" | "frame" | "frame-dark") => Promise<void>;
+    setTheme: (newTheme: ThemeName) => void;
     getTheme: () => string;
     getInstance: () => EditorInstance | null;
     getLoading: () => boolean;

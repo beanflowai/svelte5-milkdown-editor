@@ -2,6 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import type { EditorOptions } from '../types';
 	import { useEditorInstance } from '../composables/useEditor';
+	import { initializeThemeManager, setTheme as setGlobalTheme, type ThemeName } from '../themes';
 	import '../styles/milkdown.css';
 
 	interface Props {
@@ -68,21 +69,13 @@
 	let lastKnownContent = $state('');
 	let pendingAutoSave = $state(false);
 
-	// Apply theme to DOM element and editor instance
-	$effect(() => {
-		if (editorElement && editorAPI) {
-			editorElement.setAttribute('data-theme', theme);
-			editorAPI.setTheme(theme);
-		}
-	});
+	// 主题管理器初始化状态
+	let themeInitialized = $state(false);
 
-	// Handle theme changes
+	// 当 theme prop 变化时，切换主题样式表
 	$effect(() => {
-		if (editorAPI && instance) {
-			const currentTheme = editorAPI.getTheme();
-			if (currentTheme !== theme) {
-				editorAPI.setTheme(theme);
-			}
+		if (themeInitialized && theme) {
+			setGlobalTheme(theme);
 		}
 	});
 
@@ -140,6 +133,10 @@
 		try {
 			loading = true;
 			error = null;
+
+			// 初始化主题样式表管理器
+			await initializeThemeManager(theme);
+			themeInitialized = true;
 
 			editorAPI = useEditorInstance(editorElement, mergedOptions);
 			await editorAPI.createInstance();
@@ -234,14 +231,12 @@
 		editorElement?.blur();
 	}
 
-	export function setTheme(newTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark') {
-		if (editorAPI) {
-			editorAPI.setTheme(newTheme);
-		}
+	export function setTheme(newTheme: ThemeName) {
+		setGlobalTheme(newTheme);
 	}
 
-	export function getTheme(): string {
-		return editorAPI?.getTheme() || theme;
+	export function getTheme(): ThemeName {
+		return theme;
 	}
 </script>
 

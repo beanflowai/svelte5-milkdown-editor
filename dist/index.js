@@ -5,3 +5,5 @@ export { default as MilkdownEditor } from './components/MilkdownEditor.svelte';
 export { useEditor, useEditorInstance } from './composables/useEditor';
 // Export utilities (will be implemented)
 export { createEditor } from './utils/editor';
+// Export themes
+export * from './themes';

@@ -1,4 +1,5 @@
 import type { EditorOptions } from '../types';
+import { type ThemeName } from '../themes';
 import '../styles/milkdown.css';
 interface Props {
     /** Editor options */
@@ -36,8 +37,8 @@ declare const MilkdownEditor: import("svelte").Component<Props, {
     getEditorInstance: () => any;
     focus: () => void;
     blur: () => void;
-    setTheme: (newTheme: "nord" | "nord-dark" | "frame" | "frame-dark") => void;
-    getTheme: () => string;
+    setTheme: (newTheme: ThemeName) => void;
+    getTheme: () => ThemeName;
 }, "">;
 type MilkdownEditor = ReturnType<typeof MilkdownEditor>;
 export default MilkdownEditor;

@@ -3,3 +3,4 @@ export { default as MilkdownProvider } from './components/MilkdownProvider.svelt
 export { default as MilkdownEditor } from './components/MilkdownEditor.svelte';
 export { useEditor, useEditorInstance } from './composables/useEditor';
 export { createEditor } from './utils/editor';
+export * from './themes';

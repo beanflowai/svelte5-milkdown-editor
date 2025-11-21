@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import MilkdownEditor from '$lib/components/MilkdownEditor.svelte';
-	import { initializeThemes } from '$lib/themes';
+	import { MilkdownEditor } from 'svelte5-milkdown-editor';
+	import { initializeThemes } from 'svelte5-milkdown-editor';
+	import 'svelte5-milkdown-editor/styles';
 
 	// 响应式状态
 	let currentTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark' = 'nord';

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import MilkdownEditor from './MilkdownEditor.svelte';
 	import type { EditorOptions } from '../types';
+	import { setTheme as setGlobalTheme, type ThemeName } from '../themes';
 
 	interface Props {
 		/** Initial markdown content */
@@ -112,10 +113,8 @@
 	}
 
 	// Handle theme changes
-	function setTheme(newTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark') {
-		if (editorInstance && typeof editorInstance.setTheme === 'function') {
-			editorInstance.setTheme(newTheme);
-		}
+	function setTheme(newTheme: ThemeName) {
+		setGlobalTheme(newTheme);
 	}
 </script>
 
@@ -156,7 +155,7 @@
 			<select
 				id="theme-select"
 				bind:value={theme}
-				onchange={(e) => setTheme(e.target.value)}
+				onchange={(e) => setTheme((e.target as HTMLSelectElement).value)}
 			>
 				<option value="nord">Nord</option>
 				<option value="nord-dark">Nord Dark</option>
@@ -262,9 +261,9 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-		background: var(--milkdown-bg-color, #fff);
-		color: var(--milkdown-primary-color, #333);
-		border: 1px solid var(--border-color, #e2e8f0);
+		background: #fff;
+		color: #333;
+		border: 1px solid #e2e8f0;
 		border-radius: 8px;
 		overflow: hidden;
 	}
@@ -279,7 +278,7 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 0.75rem 1rem;
-		background: var(--toolbar-bg, #f8f9fa);
+		background: #f8f9fa;
 		border-bottom: 1px solid var(--border-color, #e2e8f0);
 		min-height: 60px;
 		flex-shrink: 0;
@@ -296,8 +295,8 @@
 		gap: 0.375rem;
 		padding: 0.5rem 0.75rem;
 		border: 1px solid var(--border-color, #e2e8f0);
-		background: var(--button-bg, #fff);
-		color: var(--button-color, #333);
+		background: #fff;
+		color: #333;
 		border-radius: 6px;
 		cursor: pointer;
 		transition: all 0.2s ease;
@@ -306,14 +305,14 @@
 	}
 
 	.view-controls button:hover {
-		background: var(--button-hover-bg, #f1f3f4);
-		border-color: var(--button-hover-border, #d1d5db);
+		background: #f1f3f4;
+		border-color: #d1d5db;
 	}
 
 	.view-controls button.active {
-		background: var(--milkdown-focus-color, #007bff);
+		background: #007bff;
 		color: white;
-		border-color: var(--milkdown-focus-color, #007bff);
+		border-color: #007bff;
 	}
 
 	.view-controls button .icon {
@@ -328,7 +327,7 @@
 
 	.toolbar-controls label {
 		font-weight: 500;
-		color: var(--milkdown-primary-color, #333);
+		color: #333;
 		font-size: 0.875rem;
 	}
 
@@ -336,8 +335,8 @@
 		padding: 0.375rem 0.5rem;
 		border: 1px solid var(--border-color, #e2e8f0);
 		border-radius: 4px;
-		background: var(--button-bg, #fff);
-		color: var(--button-color, #333);
+		background: #fff;
+		color: #333;
 		font-size: 0.875rem;
 		cursor: pointer;
 	}
@@ -368,7 +367,7 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 0.75rem 1rem;
-		background: var(--pane-header-bg, #f8f9fa);
+		background: #f8f9fa;
 		border-bottom: 1px solid var(--border-color, #e2e8f0);
 		flex-shrink: 0;
 		min-height: 60px;
@@ -378,7 +377,7 @@
 		margin: 0;
 		font-size: 0.875rem;
 		font-weight: 600;
-		color: var(--milkdown-primary-color, #333);
+		color: #333;
 		display: flex;
 		align-items: center;
 		gap: 0.375rem;
@@ -401,15 +400,15 @@
 		font-size: 0.75rem;
 		border: 1px solid var(--border-color, #e2e8f0);
 		border-radius: 4px;
-		background: var(--button-bg, #fff);
-		color: var(--button-color, #333);
+		background: #fff;
+		color: #333;
 		cursor: pointer;
 		transition: all 0.2s ease;
 	}
 
 	.icon-button:hover {
-		background: var(--button-hover-bg, #f1f3f4);
-		border-color: var(--button-hover-border, #d1d5db);
+		background: #f1f3f4;
+		border-color: #d1d5db;
 	}
 
 	/* Editor content */
@@ -432,7 +431,7 @@
 
 	.raw-textarea {
 		flex: 1;
-		border: 1px solid var(--border-color, #e2e8f0);
+		border: 1px solid #e2e8f0;
 		border-radius: 4px;
 		padding: 0.75rem;
 		font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
@@ -440,12 +439,12 @@
 		line-height: 1.5;
 		resize: none;
 		outline: none;
-		background: var(--code-bg, #f8f9fa);
-		color: var(--milkdown-primary-color, #333);
+		background: #f8f9fa;
+		color: #333;
 	}
 
 	.raw-textarea:focus {
-		border-color: var(--milkdown-focus-color, #007bff);
+		border-color: #007bff;
 		box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 	}
 
@@ -461,7 +460,7 @@
 
 	.resize-handle:hover,
 	.resize-handle.dragging {
-		background: var(--milkdown-focus-color, #007bff);
+		background: #007bff;
 	}
 
 	.resize-handle::before {
@@ -538,20 +537,19 @@
 		}
 	}
 
-	/* Theme-specific variables */
-	.split-view-container[data-theme="nord-dark"],
-	.split-view-container[data-theme="frame-dark"] {
-		--toolbar-bg: #2e3440;
-		--pane-header-bg: #3b4252;
-		--button-bg: #4c566a;
-		--button-color: #d8dee9;
-		--button-hover-bg: #5e81ac;
-		--button-hover-border: #5e81ac;
-		--code-bg: #3b4252;
-		--status-bar-bg: #2e3440;
-		--text-muted: #8890a4;
-		--border-color: #4c566a;
-		--resize-handle-bg: #4c566a;
-		--resize-handle-indicator: #8890a4;
+	/* Theme-specific variables for frame theme */
+	.split-view-container[data-theme="frame"] {
+		--toolbar-bg: #f8f9fa;
+		--pane-header-bg: #ffffff;
+		--button-bg: #ffffff;
+		--button-color: #333333;
+		--button-hover-bg: #e9ecef;
+		--button-hover-border: #dee2e6;
+		--code-bg: #f8f9fa;
+		--status-bar-bg: #f8f9fa;
+		--text-muted: #6c757d;
+		--border-color: #dee2e6;
+		--resize-handle-bg: #dee2e6;
+		--resize-handle-indicator: #adb5bd;
 	}
 </style>
