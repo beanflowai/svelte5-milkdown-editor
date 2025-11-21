@@ -96,7 +96,8 @@ export class ThemeStylesheetManager {
 			const styleElement = document.createElement('style');
 			styleElement.setAttribute('data-milkdown-theme', themeName);
 			styleElement.textContent = cssContent;
-			styleElement.disabled = true; // 默认禁用
+			// 使用 media 属性禁用样式（比 disabled 更可靠）
+			styleElement.media = 'not all';
 
 			// 添加到 head
 			document.head.appendChild(styleElement);
@@ -114,9 +115,13 @@ export class ThemeStylesheetManager {
 			return;
 		}
 
-		// 禁用所有主题
+		// 使用 media 属性切换主题（比 disabled 更可靠）
 		this.styleElements.forEach((element, name) => {
-			element.disabled = name !== themeName;
+			if (name === themeName) {
+				element.media = 'all'; // 启用
+			} else {
+				element.media = 'not all'; // 禁用
+			}
 		});
 
 		this.currentTheme = themeName;
