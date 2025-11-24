@@ -1,7 +1,7 @@
 {
 	"name": "svelte5-milkdown-editor",
 	"private": false,
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
@@ -50,7 +50,8 @@
 		"@milkdown/kit": "^7.17.1",
 		"@milkdown/preset-commonmark": "^7.17.1",
 		"@milkdown/preset-gfm": "^7.17.1",
-		"@milkdown/prose": "^7.17.1"
+		"@milkdown/prose": "^7.17.1",
+		"@milkdown/utils": "^7.17.1"
 	},
 	"peerDependencies": {
 		"svelte": "^5.0.0"

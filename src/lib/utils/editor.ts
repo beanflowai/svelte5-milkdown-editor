@@ -1,5 +1,6 @@
 import type { EditorOptions, EditorInstance } from '../types';
 import { Crepe } from '@milkdown/crepe';
+import { replaceAll } from '@milkdown/utils';
 
 export async function createEditor(element: HTMLElement, options: EditorOptions = {}): Promise<EditorInstance> {
 	// Map theme names to CSS class names
@@ -37,25 +38,13 @@ export function getMarkdownContent(instance: EditorInstance): string {
 }
 
 export function setMarkdownContent(instance: EditorInstance, content: string): void {
-	try {
-		// In Milkdown 7.x with Crepe, we can use the setMarkdown method
-		if (instance.crepe && typeof instance.crepe.setMarkdown === 'function') {
-			instance.crepe.setMarkdown(content);
-		} else {
-			// Fallback: try to access the ProseMirror view directly
-			const view = instance.crepe.editor?.view;
-			if (view) {
-				const { state, dispatch } = view;
-				const { tr } = state;
+	if (!instance.crepe || !instance.crepe.editor) {
+		throw new Error('Cannot set content: editor instance not available');
+	}
 
-				// Create a new transaction with the updated content
-				const newDoc = state.schema.text(content);
-				const newTr = tr.replaceWith(0, state.doc.content.size, newDoc.content);
-				dispatch(newTr);
-			} else {
-				throw new Error('Cannot set content: editor view not available');
-			}
-		}
+	try {
+		// Use Milkdown official replaceAll utility
+		instance.crepe.editor.action(replaceAll(content));
 	} catch (error) {
 		console.error('Failed to set markdown content:', error);
 		throw new Error(`Failed to set content: ${error instanceof Error ? error.message : 'Unknown error'}`);
