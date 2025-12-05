@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { MilkdownEditor } from 'svelte5-milkdown-editor';
-	import { initializeThemes } from 'svelte5-milkdown-editor';
-	import 'svelte5-milkdown-editor/styles';
+	import { MilkdownEditor } from '$lib';
+	import { initializeThemes } from '$lib';
+	import '$lib/styles/milkdown.css';
 
 	// 响应式状态
 	let currentTheme: 'nord' | 'nord-dark' | 'frame' | 'frame-dark' = 'nord';
 	let externalStylesEnabled = false;
 	let editorInstance: any = null;
+	let containerWidth = 800; // 可调整的容器宽度
 
 	// Test Markdown content
 	const testMarkdown = `# Milkdown Editor Style Isolation Test
@@ -195,20 +196,34 @@ function testStyleIsolation() {
 		</div>
 	</div>
 
-	<!-- Editor test area -->
+	<!-- Flex Container Test Area -->
 	<div class="editor-section">
-		<h2>Editor Test Area</h2>
-		<div class="editor-container" data-theme={currentTheme}>
-			<MilkdownEditor
-				id="test-editor"
-				defaultValue={testMarkdown}
-				theme={currentTheme}
-				height="600px"
-				placeholder="Enter test content here..."
-				onReady={handleReady}
-				onError={handleError}
-				onChange={handleChange}
-			/>
+		<h2>Flex Container Test (Resizable)</h2>
+		<div class="width-control">
+			<label>
+				容器宽度: <strong>{containerWidth}px</strong>
+				<input
+					type="range"
+					min="300"
+					max="1200"
+					bind:value={containerWidth}
+				/>
+			</label>
+		</div>
+		<div class="flex-test-container" style="width: {containerWidth}px;">
+			<div class="sidebar">Sidebar</div>
+			<div class="flex-editor-wrapper" data-theme={currentTheme}>
+				<MilkdownEditor
+					id="test-editor"
+					defaultValue={testMarkdown}
+					theme={currentTheme}
+					height="500px"
+					placeholder="Enter test content here..."
+					onReady={handleReady}
+					onError={handleError}
+					onChange={handleChange}
+				/>
+			</div>
 		</div>
 	</div>
 
@@ -352,6 +367,59 @@ function testStyleIsolation() {
 		border-radius: 6px;
 		overflow: hidden;
 		min-height: 600px;
+	}
+
+	.test-hint {
+		color: #6b7280;
+		font-size: 0.9rem;
+		margin-bottom: 1rem;
+	}
+
+	.width-control {
+		margin-bottom: 1rem;
+		padding: 1rem;
+		background: #f1f5f9;
+		border-radius: 6px;
+	}
+
+	.width-control label {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		font-weight: 500;
+	}
+
+	.width-control input[type="range"] {
+		flex: 1;
+		height: 8px;
+	}
+
+	/* Flex container test - simulates real-world sidebar + editor layout */
+	.flex-test-container {
+		display: flex;
+		border: 2px dashed #3b82f6;
+		border-radius: 6px;
+		overflow: hidden;
+		min-width: 300px;
+		max-width: 100%;
+	}
+
+	.sidebar {
+		width: 150px;
+		min-width: 150px;
+		background: #1e293b;
+		color: white;
+		padding: 1rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 600;
+	}
+
+	.flex-editor-wrapper {
+		flex: 1;
+		min-width: 0; /* Critical for flex shrinking */
+		border-left: 1px solid #e2e8f0;
 	}
 
 	.external-test-area {

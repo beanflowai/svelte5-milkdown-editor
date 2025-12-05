@@ -20,6 +20,32 @@
     max-width: 100%;
 }
 
+/* Fix: Milkdown internal container - prevent horizontal overflow, allow vertical scroll */
+.milkdown,
+.milkdown-editor.milkdown {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
+/* Global .milkdown class fix for flex containers */
+:global(.milkdown) {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
+/* Global .ProseMirror fix - allow vertical scroll, hide horizontal overflow */
+:global(.milkdown .ProseMirror),
+:global(.ProseMirror) {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
 .milkdown-editor:focus-within {
     border-color: var(--milkdown-focus-color, #007bff);
     box-shadow: 0 0 0 2px var(--milkdown-focus-color, #007bff)40;
