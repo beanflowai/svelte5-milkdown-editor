@@ -15,6 +15,9 @@
     background-color: var(--milkdown-bg-color, #fff);
     overflow: auto;
     transition: border-color 0.2s ease;
+    /* Fix: allow shrinking in flex containers */
+    min-width: 0;
+    max-width: 100%;
 }
 
 .milkdown-editor:focus-within {
@@ -74,6 +77,18 @@
     height: 100%;
     overflow-y: auto;
     line-height: 1.6;
+    /* Fix: allow shrinking in flex containers */
+    min-width: 0;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Code blocks: horizontal scroll instead of expanding container */
+.milkdown-editor :global(pre),
+.milkdown-editor :global(.cm-editor) {
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 .milkdown-editor :global(.ProseMirror p) {
