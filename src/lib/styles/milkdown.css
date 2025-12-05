@@ -13,7 +13,7 @@
     border: 1px solid var(--milkdown-border-color, #ccc);
     border-radius: 6px;
     background-color: var(--milkdown-bg-color, #fff);
-    overflow: auto;
+    overflow: hidden;
     transition: border-color 0.2s ease;
     /* Fix: allow shrinking in flex containers */
     min-width: 0;
@@ -76,6 +76,7 @@
     min-height: 200px;
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     line-height: 1.6;
     /* Fix: allow shrinking in flex containers */
     min-width: 0;
@@ -89,6 +90,43 @@
 .milkdown-editor :global(.cm-editor) {
     max-width: 100%;
     overflow-x: auto;
+}
+
+/* Milkdown code block wrapper */
+.milkdown-editor :global(.milkdown-code-block),
+.milkdown-editor :global([data-milkdown-code-block]) {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* CodeMirror specific fixes */
+.milkdown-editor :global(.cm-scroller) {
+    overflow-x: auto !important;
+}
+
+.milkdown-editor :global(.cm-content) {
+    max-width: none;
+}
+
+/* Table blocks: horizontal scroll */
+.milkdown-editor :global(.milkdown-table-block),
+.milkdown-editor :global(.tableWrapper),
+.milkdown-editor :global(table) {
+    max-width: 100%;
+    overflow-x: auto;
+    display: block;
+}
+
+/* Headings: prevent overflow */
+.milkdown-editor :global(.ProseMirror h1),
+.milkdown-editor :global(.ProseMirror h2),
+.milkdown-editor :global(.ProseMirror h3),
+.milkdown-editor :global(.ProseMirror h4),
+.milkdown-editor :global(.ProseMirror h5),
+.milkdown-editor :global(.ProseMirror h6) {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .milkdown-editor :global(.ProseMirror p) {
